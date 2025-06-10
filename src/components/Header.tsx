@@ -11,12 +11,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [headerData, setHeaderData] = useState({
+    logoUrl: "/next.svg",
+    title: "Dusun Gatak 1",
+    subtitle: "Kalurahan Ngestirejo",
+  });
   const pathname = usePathname();
   const { user, loading } = useAuth();
 
@@ -33,9 +39,20 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchHeaderData = async () => {
+      const headerDoc = await getDoc(doc(db, "siteConfig", "header"));
+      if (headerDoc.exists()) {
+        setHeaderData(headerDoc.data());
+      }
+    };
+    fetchHeaderData();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      localStorage.removeItem("idToken");
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -55,15 +72,15 @@ export default function Header() {
         className="text-2xl font-semibold"
       >
         <Image
-          src="/next.svg"
+          src={headerData.logoUrl}
           height={40}
           width={80}
           className="mr-3 h-6 sm:h-9"
           alt="Gatak 1 Logo"
         />
         <div className="flex dark:text-white flex-col">
-          <span>Dusun Gatak 1</span>
-          <span className="text-sm font-light">Kalurahan Ngestirejo</span>
+          <span>{headerData.title}</span>
+          <span className="text-sm font-light">{headerData.subtitle}</span>
         </div>
       </NavbarBrand>
       <NavbarToggle />
@@ -100,6 +117,14 @@ export default function Header() {
         >
           Galeri
         </NavbarLink>
+        <NavbarLink
+          as={Link}
+          href="/umkm"
+          active={pathname === "/umkm"}
+          className="text-xl"
+        >
+          UMKM
+        </NavbarLink>
         {!loading && !user && (
           <NavbarLink
             as={Link}
@@ -108,6 +133,11 @@ export default function Header() {
             className="text-xl"
           >
             Login
+          </NavbarLink>
+        )}
+        {!loading && user && (
+          <NavbarLink as={Link} href="/admin" className="text-xl">
+            Dashboard
           </NavbarLink>
         )}
         {!loading && user && (

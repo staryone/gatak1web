@@ -7,9 +7,9 @@ import {
   Textarea,
   Card,
   FileInput,
-  ModalBody,
   Modal,
   ModalHeader,
+  ModalBody,
   ModalFooter,
 } from "flowbite-react";
 import { useState, useEffect } from "react";
@@ -27,36 +27,36 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { HiPencil, HiTrash } from "react-icons/hi";
 
-export default function NewsManagement() {
-  const [title, setTitle] = useState("");
+export default function UMKMManagement() {
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [news, setNews] = useState<any[]>([]);
+  const [umkms, setUMKMs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteImagePublicId, setDeleteImagePublicId] = useState<string | null>(
     null
   );
-  const [editId, setEditId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState("");
+  const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editImage, setEditImage] = useState<File | null>(null);
   const [editImageUrl, setEditImageUrl] = useState("");
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchUMKMs = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "news"));
-        setNews(
+        const querySnapshot = await getDocs(collection(db, "umkm"));
+        setUMKMs(
           querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
         );
       } catch (err: any) {
-        toast.error(err.message || "Gagal memuat berita.");
+        toast.error(err.message || "Gagal memuat UMKM.");
       }
     };
-    fetchNews();
+    fetchUMKMs();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,23 +69,24 @@ export default function NewsManagement() {
         imageUrl = await uploadImage(image);
         imagePublicId = imageUrl.split("/").pop()?.split(".")[0] || "";
       }
-      await addDoc(collection(db, "news"), {
-        title,
+      await addDoc(collection(db, "umkm"), {
+        name,
         description,
         imageUrl,
         imagePublicId,
-        author: "Admin",
-        date: new Date().toISOString().split("T")[0],
+        createdAt: new Date().toISOString(),
       });
-      toast.success("Berita berhasil ditambahkan!");
-      setTitle("");
+      toast.success("UMKM berhasil ditambahkan!");
+      setName("");
       setDescription("");
       setImage(null);
-      const querySnapshot = await getDocs(collection(db, "news"));
-      setNews(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const querySnapshot = await getDocs(collection(db, "umkm"));
+      setUMKMs(
+        querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      );
     } catch (err: any) {
-      console.error("Add news error:", err);
-      toast.error(err.message || "Gagal menambah berita.");
+      console.error("Add UMKM error:", err);
+      toast.error(err.message || "Gagal menambah UMKM.");
     } finally {
       setLoading(false);
     }
@@ -93,7 +94,7 @@ export default function NewsManagement() {
 
   const handleEdit = (item: any) => {
     setEditId(item.id);
-    setEditTitle(item.title);
+    setEditName(item.name);
     setEditDescription(item.description);
     setEditImageUrl(item.imageUrl || "");
     setEditImage(null);
@@ -107,9 +108,8 @@ export default function NewsManagement() {
     try {
       let imageUrl = editImageUrl;
       let imagePublicId =
-        news.find((item) => item.id === editId)?.imagePublicId || "";
+        umkms.find((item) => item.id === editId)?.imagePublicId || "";
       if (editImage) {
-        // Delete old image if exists
         if (imagePublicId) {
           await fetch("/api/cloudinary/delete", {
             method: "POST",
@@ -117,23 +117,24 @@ export default function NewsManagement() {
             body: JSON.stringify({ publicId: imagePublicId }),
           });
         }
-        // Upload new image
         imageUrl = await uploadImage(editImage);
         imagePublicId = imageUrl.split("/").pop()?.split(".")[0] || "";
       }
-      await updateDoc(doc(db, "news", editId), {
-        title: editTitle,
+      await updateDoc(doc(db, "umkm", editId), {
+        name: editName,
         description: editDescription,
         imageUrl,
         imagePublicId,
       });
-      toast.success("Berita berhasil diperbarui!");
+      toast.success("UMKM berhasil diperbarui!");
       setModalOpen(false);
-      const querySnapshot = await getDocs(collection(db, "news"));
-      setNews(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const querySnapshot = await getDocs(collection(db, "umkm"));
+      setUMKMs(
+        querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      );
     } catch (err: any) {
-      console.error("Update news error:", err);
-      toast.error(err.message || "Gagal memperbarui berita.");
+      console.error("Update UMKM error:", err);
+      toast.error(err.message || "Gagal memperbarui UMKM.");
     } finally {
       setLoading(false);
     }
@@ -162,12 +163,13 @@ export default function NewsManagement() {
           );
         }
       }
-      await deleteDoc(doc(db, "news", deleteId));
-      setNews(news.filter((item) => item.id !== deleteId));
-      toast.success("Berita dan gambar berhasil dihapus!");
+      await deleteDoc(doc(db, "umkm", deleteId));
+      setUMKMs(umkms.filter((item) => item.id !== deleteId));
+      toast.success("UMKM dan gambar berhasil dihapus!");
+      setDeleteModalOpen(false);
     } catch (err: any) {
-      console.error("Delete news error:", err);
-      toast.error(err.message || "Gagal menghapus berita.");
+      console.error("Delete UMKM error:", err);
+      toast.error(err.message || "Gagal menghapus UMKM.");
     } finally {
       setLoading(false);
     }
@@ -177,20 +179,20 @@ export default function NewsManagement() {
     <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          Kelola Berita
+          Kelola UMKM
         </h2>
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label
-                htmlFor="title"
+                htmlFor="name"
                 className="text-gray-700 dark:text-gray-300 font-medium"
               />
               <TextInput
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Masukkan judul berita"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Masukkan nama UMKM"
                 className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 required
               />
@@ -204,7 +206,7 @@ export default function NewsManagement() {
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Masukkan deskripsi berita"
+                placeholder="Masukkan deskripsi UMKM"
                 className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 rows={6}
                 required
@@ -228,15 +230,15 @@ export default function NewsManagement() {
               className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
               disabled={loading}
             >
-              {loading ? "Menambahkan..." : "Tambah Berita"}
+              {loading ? "Menambahkan..." : "Tambah UMKM"}
             </Button>
           </form>
         </div>
         <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-          Daftar Berita
+          Daftar UMKM
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {news.map((item) => (
+          {umkms.map((item) => (
             <Card
               key={item.id}
               className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow dark:bg-gray-800 border-none"
@@ -244,7 +246,7 @@ export default function NewsManagement() {
               {item.imageUrl && (
                 <Image
                   src={item.imageUrl}
-                  alt={item.title}
+                  alt={item.name}
                   width={400}
                   height={200}
                   className="object-cover w-full h-48 rounded-t-xl"
@@ -252,14 +254,13 @@ export default function NewsManagement() {
               )}
               <div className="p-4 flex flex-col">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                  {item.title}
+                  {item.name}
                 </h4>
                 <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
                   {item.description}
                 </p>
                 <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-xs mb-4">
-                  <span>{item.author}</span>
-                  <span>{item.date}</span>
+                  <span>{item.createdAt.split("T")[0]}</span>
                 </div>
                 <div className="flex space-x-2">
                   <Button
@@ -295,20 +296,20 @@ export default function NewsManagement() {
           popup
         >
           <ModalHeader className="text-xl font-semibold text-gray-900 dark:text-white">
-            Edit Berita
+            Edit UMKM
           </ModalHeader>
           <ModalBody>
             <form onSubmit={handleUpdate} className="space-y-6">
               <div>
                 <Label
-                  htmlFor="editTitle"
+                  htmlFor="editName"
                   className="text-gray-700 dark:text-gray-300 font-medium"
                 />
                 <TextInput
-                  id="editTitle"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  placeholder="Masukkan judul berita"
+                  id="editName"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Masukkan nama UMKM"
                   className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   required
                 />
@@ -322,7 +323,7 @@ export default function NewsManagement() {
                   id="editDescription"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
-                  placeholder="Masukkan deskripsi berita"
+                  placeholder="Masukkan deskripsi UMKM"
                   className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   rows={6}
                   required

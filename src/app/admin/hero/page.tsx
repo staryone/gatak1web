@@ -2,9 +2,9 @@
 
 import { Button, Label, TextInput, FileInput, Textarea } from "flowbite-react";
 import { useState } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { storage, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
+import { uploadImage } from "@/lib/cloudinary";
 
 export default function HeroManagement() {
   const [image, setImage] = useState<File | null>(null);
@@ -21,9 +21,7 @@ export default function HeroManagement() {
     try {
       let imageUrl = "";
       if (image) {
-        const imageRef = ref(storage, `hero/hero-image-${Date.now()}`);
-        await uploadBytes(imageRef, image);
-        imageUrl = await getDownloadURL(imageRef);
+        imageUrl = await uploadImage(image);
       }
       await setDoc(doc(db, "siteConfig", "hero"), {
         imageUrl,
@@ -83,6 +81,7 @@ export default function HeroManagement() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Masukkan deskripsi hero"
             className="mt-1"
+            rows={6}
           />
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}

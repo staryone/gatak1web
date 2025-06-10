@@ -3,19 +3,14 @@
 import { Button, FileInput } from "flowbite-react";
 import { useState, useEffect } from "react";
 import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import {
   collection,
   addDoc,
   getDocs,
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { storage, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
+import { uploadImage } from "@/lib/cloudinary";
 import Image from "next/image";
 
 export default function GalleryManagement() {
@@ -43,9 +38,7 @@ export default function GalleryManagement() {
       return;
     }
     try {
-      const imageRef = ref(storage, `gallery/gallery-image-${Date.now()}`);
-      await uploadBytes(imageRef, image);
-      const imageUrl = await getDownloadURL(imageRef);
+      const imageUrl = await uploadImage(image);
       await addDoc(collection(db, "gallery"), {
         src: imageUrl,
         alt: `Galeri ${Date.now()}`,
@@ -61,10 +54,8 @@ export default function GalleryManagement() {
     }
   };
 
-  const handleDelete = async (id: string, imageUrl: string) => {
+  const handleDelete = async (id: string) => {
     try {
-      const imageRef = ref(storage, imageUrl);
-      await deleteObject(imageRef);
       await deleteDoc(doc(db, "gallery", id));
       setGallery(gallery.filter((item) => item.id !== id));
       setSuccess("Image deleted successfully!");
@@ -116,7 +107,7 @@ export default function GalleryManagement() {
               color="red"
               size="sm"
               className="absolute top-2 right-2"
-              onClick={() => handleDelete(item.id, item.src)}
+              onClick={() => handleDelete(item.id)}
             >
               Hapus
             </Button>

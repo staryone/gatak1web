@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeModeScript } from "flowbite-react";
 import FooterMain from "@/components/FooterMain";
 import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Website Dusun Gatak 1",
@@ -21,6 +22,7 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
+          <Toaster position="top-right" />
           {children}
           <FooterMain />
         </AuthProvider>

@@ -2,9 +2,9 @@
 
 import { Button, Label, TextInput, FileInput } from "flowbite-react";
 import { useState } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { storage, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
+import { uploadImage } from "@/lib/cloudinary";
 
 export default function HeaderManagement() {
   const [logo, setLogo] = useState<File | null>(null);
@@ -20,9 +20,7 @@ export default function HeaderManagement() {
     try {
       let logoUrl = "";
       if (logo) {
-        const logoRef = ref(storage, `header/logo-${Date.now()}`);
-        await uploadBytes(logoRef, logo);
-        logoUrl = await getDownloadURL(logoRef);
+        logoUrl = await uploadImage(logo);
       }
       await setDoc(doc(db, "siteConfig", "header"), {
         logoUrl,
@@ -30,8 +28,8 @@ export default function HeaderManagement() {
         subtitle,
       });
       setSuccess("Header updated successfully!");
-    } catch {
-      setError("Failed to update header.");
+    } catch (err: any) {
+      setError(err.message || "Failed to update header.");
     }
   };
 
