@@ -30,6 +30,8 @@ import { HiPencil, HiTrash } from "react-icons/hi";
 export default function UMKMManagement() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [phone, setPhone] = useState("");
+  const [socialMedia, setSocialMedia] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [umkms, setUMKMs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,6 +44,8 @@ export default function UMKMManagement() {
   );
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editSocialMedia, setEditSocialMedia] = useState("");
   const [editImage, setEditImage] = useState<File | null>(null);
   const [editImageUrl, setEditImageUrl] = useState("");
 
@@ -72,6 +76,8 @@ export default function UMKMManagement() {
       await addDoc(collection(db, "umkm"), {
         name,
         description,
+        phone,
+        socialMedia,
         imageUrl,
         imagePublicId,
         createdAt: new Date().toISOString(),
@@ -79,6 +85,8 @@ export default function UMKMManagement() {
       toast.success("UMKM berhasil ditambahkan!");
       setName("");
       setDescription("");
+      setPhone("");
+      setSocialMedia("");
       setImage(null);
       const querySnapshot = await getDocs(collection(db, "umkm"));
       setUMKMs(
@@ -96,6 +104,8 @@ export default function UMKMManagement() {
     setEditId(item.id);
     setEditName(item.name);
     setEditDescription(item.description);
+    setEditPhone(item.phone || "");
+    setEditSocialMedia(item.socialMedia || "");
     setEditImageUrl(item.imageUrl || "");
     setEditImage(null);
     setModalOpen(true);
@@ -123,6 +133,8 @@ export default function UMKMManagement() {
       await updateDoc(doc(db, "umkm", editId), {
         name: editName,
         description: editDescription,
+        phone: editPhone,
+        socialMedia: editSocialMedia,
         imageUrl,
         imagePublicId,
       });
@@ -214,6 +226,33 @@ export default function UMKMManagement() {
             </div>
             <div>
               <Label
+                htmlFor="phone"
+                className="text-gray-700 dark:text-gray-300 font-medium"
+              />
+              <TextInput
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Masukkan nomor telepon (contoh: +6281234567890)"
+                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                type="tel"
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="socialMedia"
+                className="text-gray-700 dark:text-gray-300 font-medium"
+              />
+              <TextInput
+                id="socialMedia"
+                value={socialMedia}
+                onChange={(e) => setSocialMedia(e.target.value)}
+                placeholder="Masukkan link sosial media (contoh: https://instagram.com/username)"
+                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div>
+              <Label
                 htmlFor="image"
                 className="text-gray-700 dark:text-gray-300 font-medium"
               />
@@ -256,9 +295,27 @@ export default function UMKMManagement() {
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                   {item.name}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-3 flex-grow">
                   {item.description}
                 </p>
+                {item.phone && (
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-2">
+                    <strong>Telepon:</strong> {item.phone}
+                  </p>
+                )}
+                {item.socialMedia && (
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                    <strong>Sosial Media:</strong>{" "}
+                    <a
+                      href={item.socialMedia}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      {item.socialMedia}
+                    </a>
+                  </p>
+                )}
                 <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-xs mb-4">
                   <span>{item.createdAt.split("T")[0]}</span>
                 </div>
@@ -327,6 +384,33 @@ export default function UMKMManagement() {
                   className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   rows={6}
                   required
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="editPhone"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                />
+                <TextInput
+                  id="editPhone"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  placeholder="Masukkan nomor telepon (contoh: +6281234567890)"
+                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  type="tel"
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="editSocialMedia"
+                  className="text-gray-700 dark:text-gray-300 font-medium"
+                />
+                <TextInput
+                  id="editSocialMedia"
+                  value={editSocialMedia}
+                  onChange={(e) => setEditSocialMedia(e.target.value)}
+                  placeholder="Masukkan link sosial media (contoh: https://instagram.com/username)"
+                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>

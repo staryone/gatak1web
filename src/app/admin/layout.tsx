@@ -99,16 +99,6 @@ export default function AdminLayout({
             </SidebarItem>
             <SidebarItem
               as={Link}
-              href="/admin/about"
-              icon={HiDocumentText}
-              active={pathname === "/admin/about"}
-              className="text-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              Tentang Dusun
-            </SidebarItem>
-            <SidebarItem
-              as={Link}
               href="/admin/profil-dusun"
               icon={HiUser}
               active={pathname === "/admin/profil-dusun"}

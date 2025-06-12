@@ -45,23 +45,11 @@ export default function AdminDashboard() {
 
         <AccordionPanel>
           <div className="bg-white shadow rounded-lg p-4 mb-4">
-            <AccordionTitle>Tentang Dusun</AccordionTitle>
-            <AccordionContent>
-              <p className="text-gray-700">
-                Tentang Dusun untuk mengatur tentang dusun dengan teks panjang,
-                seperti sejarah atau deskripsi lengkap.
-              </p>
-            </AccordionContent>
-          </div>
-        </AccordionPanel>
-
-        <AccordionPanel>
-          <div className="bg-white shadow rounded-lg p-4 mb-4">
             <AccordionTitle>Profil Dusun</AccordionTitle>
             <AccordionContent>
               <p className="text-gray-700">
-                Profil Dusun untuk mengatur visi dan misi dusun, menjelaskan
-                tujuan dan arah masa depan.
+                Profil Dusun untuk mengatur sejarah dusun, visi, dan misi dusun,
+                menjelaskan tujuan dan arah masa depan.
               </p>
             </AccordionContent>
           </div>
