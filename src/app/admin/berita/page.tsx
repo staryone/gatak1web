@@ -161,6 +161,7 @@ export default function NewsManagement() {
       await deleteDoc(doc(db, "news", deleteId));
       setNews(news.filter((item) => item.id !== deleteId));
       toast.success("Berita dan gambar berhasil dihapus!");
+      setDeleteModalOpen(false);
     } catch {
       toast.error("Gagal menghapus berita.");
     } finally {
