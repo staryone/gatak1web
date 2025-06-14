@@ -165,7 +165,7 @@ export default function Header() {
         } ${poppins.className}`}
       >
         <div className="flex items-center justify-between px-4 py-2">
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <Image src={headerData.logoUrl} height={40} width={40} alt="Logo" />
             <div className="ml-3">
               <span className="text-lg font-bold">{headerData.title}</span>
@@ -173,7 +173,7 @@ export default function Header() {
                 {headerData.subtitle}
               </span>
             </div>
-          </div>
+          </Link>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-white focus:outline-none"
