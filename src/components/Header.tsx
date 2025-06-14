@@ -20,7 +20,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [headerData, setHeaderData] = useState<DocumentData>({
-    logoUrl: "/next.svg",
+    logoUrl: "/logo.png",
     title: "Padukuhan Gatak 1",
     subtitle: "Kalurahan Ngestirejo",
   });

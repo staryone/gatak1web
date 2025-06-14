@@ -71,7 +71,7 @@ export default function AdminLayout({
       >
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <Link href="/" className="flex items-center">
-            <Image src="/next.svg" alt="Logo" width={40} height={40} />
+            <Image src="/logo.png" alt="Logo" width={40} height={40} />
             <span className="ml-3 text-xl font-bold text-green-700 dark:text-green-300">
               Dusun Gatak 1
             </span>
