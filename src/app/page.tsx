@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Poppins } from "next/font/google";
+import VisitorCounter from "@/components/VisitorCounter";
 
 const poppins = Poppins({
   weight: ["400", "600", "700"],
@@ -89,6 +90,7 @@ export default function Home() {
               alt="Hero Image"
               fill
               className="object-cover brightness-75"
+              priority
             />
             <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4">
               <div>
@@ -332,6 +334,7 @@ export default function Home() {
           </section>
         </>
       )}
+      <VisitorCounter />
     </div>
   );
 }

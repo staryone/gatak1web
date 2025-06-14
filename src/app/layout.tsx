@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeModeScript } from "flowbite-react";
 import FooterMain from "@/components/FooterMain";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
@@ -23,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <ThemeModeScript />
-      </head>
+      <head></head>
       <body className={poppins.className}>
         <AuthProvider>
           <Toaster
