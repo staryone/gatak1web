@@ -159,7 +159,7 @@ export default function Header() {
       {/* Mobile Navbar */}
       <nav
         className={`lg:hidden fixed w-full z-10 text-white transition-all duration-300 ${
-          isScrolled || isMenuOpen || pathname !== "/"
+          isScrolled || isMenuOpen || isLoadingData || pathname !== "/"
             ? "bg-green-700 shadow-md"
             : "bg-transparent"
         } ${poppins.className}`}
