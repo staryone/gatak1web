@@ -19,8 +19,10 @@ export async function POST(request: Request) {
 
     await cloudinary.uploader.destroy(publicId);
     return NextResponse.json({ message: "Image deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting Cloudinary image:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { error: "Error deleting Cloudinary image" },
+      { status: 500 }
+    );
   }
 }
