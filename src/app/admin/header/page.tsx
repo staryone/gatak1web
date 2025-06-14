@@ -34,8 +34,8 @@ export default function HeaderManagement() {
           setLogoUrl(data.logoUrl || "");
           setLogoPublicId(data.logoPublicId || "");
         }
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat data header.");
+      } catch {
+        toast.error("Gagal memuat data header.");
       }
     };
     fetchHeaderData();
@@ -73,9 +73,8 @@ export default function HeaderManagement() {
       setLogoUrl(newLogoUrl);
       setLogoPublicId(newLogoPublicId);
       setModalOpen(false);
-    } catch (err: any) {
-      console.error("Update header error:", err);
-      toast.error(err.message || "Gagal memperbarui header.");
+    } catch {
+      toast.error("Gagal memperbarui header.");
     } finally {
       setLoading(false);
     }

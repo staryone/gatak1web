@@ -36,8 +36,8 @@ export default function HeroManagement() {
           setImageUrl(data.imageUrl || "");
           setImagePublicId(data.imagePublicId || "");
         }
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat data hero.");
+      } catch {
+        toast.error("Gagal memuat data hero.");
       }
     };
     fetchHeroData();
@@ -76,9 +76,8 @@ export default function HeroManagement() {
       setImageUrl(newImageUrl);
       setImagePublicId(newImagePublicId);
       setModalOpen(false);
-    } catch (err: any) {
-      console.error("Update hero error:", err);
-      toast.error(err.message || "Gagal memperbarui hero.");
+    } catch {
+      toast.error("Gagal memperbarui hero.");
     } finally {
       setLoading(false);
     }

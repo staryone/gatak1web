@@ -8,6 +8,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/cloudinary";
@@ -21,7 +22,7 @@ const poppins = Poppins({
 
 export default function GalleryManagement() {
   const [image, setImage] = useState<File | null>(null);
-  const [gallery, setGallery] = useState<any[]>([]);
+  const [gallery, setGallery] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -36,8 +37,8 @@ export default function GalleryManagement() {
         setGallery(
           querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
         );
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat galeri.");
+      } catch {
+        toast.error("Gagal memuat galeri.");
       }
     };
     fetchGallery();
@@ -64,9 +65,8 @@ export default function GalleryManagement() {
       setGallery(
         querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
       );
-    } catch (err: any) {
-      console.error("Add image error:", err);
-      toast.error(err.message || "Gagal menambah gambar.");
+    } catch {
+      toast.error("Gagal menambah gambar.");
     } finally {
       setLoading(false);
     }
@@ -99,9 +99,8 @@ export default function GalleryManagement() {
       setGallery(gallery.filter((item) => item.id !== deleteId));
       toast.success("Gambar berhasil dihapus!");
       setDeleteModalOpen(false);
-    } catch (err: any) {
-      console.error("Delete image error:", err);
-      toast.error(err.message || "Gagal menghapus gambar.");
+    } catch {
+      toast.error("Gagal menghapus gambar.");
     } finally {
       setLoading(false);
     }

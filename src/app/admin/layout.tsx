@@ -40,8 +40,8 @@ export default function AdminLayout({
     }
   };
 
-  const handleOutsideClick = (e) => {
-    if (isOpen && !e.target.closest(".sidebar")) {
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isOpen && !(e.target as Element).closest(".sidebar")) {
       setIsOpen(false);
     }
   };

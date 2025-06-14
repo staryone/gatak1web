@@ -51,8 +51,8 @@ export default function SiteConfigManagement() {
           setVillageArea(data.villageArea || "");
           setPopulation(data.population || "");
         }
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat data.");
+      } catch {
+        toast.error("Gagal memuat data.");
       }
     };
     fetchData();
@@ -83,9 +83,8 @@ export default function SiteConfigManagement() {
       ]);
       toast.success("Data berhasil diperbarui!");
       setModalOpen(false);
-    } catch (err: any) {
-      console.error("Update error:", err);
-      toast.error(err.message || "Gagal memperbarui data.");
+    } catch {
+      toast.error("Gagal memperbarui data.");
     } finally {
       setLoading(false);
     }

@@ -45,7 +45,7 @@ export default function DetailUMKM() {
         setSocialMedia(data.socialMedia || "");
         setImageUrl(data.imageUrl || "");
         setCreatedAt(data.createdAt || new Date().toISOString());
-      } catch (err: any) {
+      } catch (err) {
         console.error("Failed to fetch UMKM:", err);
         router.push("/not-found");
       } finally {

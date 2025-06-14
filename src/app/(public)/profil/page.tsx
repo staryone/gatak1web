@@ -48,7 +48,7 @@ export default function ProfilPadukuhan() {
           setVillageArea(data.villageArea || "");
           setPopulation(data.population || "");
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("Failed to fetch data:", err);
       }
     };

@@ -17,8 +17,8 @@ export default function AboutManagement() {
     try {
       await setDoc(doc(db, "siteConfig", "about"), { content });
       setSuccess("About content updated successfully!");
-    } catch (err: any) {
-      setError(err.message || "Failed to update about content.");
+    } catch {
+      setError("Failed to update about content.");
     }
   };
 

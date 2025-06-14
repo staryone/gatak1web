@@ -9,6 +9,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/cloudinary";
@@ -25,7 +26,7 @@ export default function NewsManagement() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -46,8 +47,8 @@ export default function NewsManagement() {
         setNews(
           querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
         );
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat berita.");
+      } catch {
+        toast.error("Gagal memuat berita.");
       }
     };
     fetchNews();
@@ -77,15 +78,14 @@ export default function NewsManagement() {
       setImage(null);
       const querySnapshot = await getDocs(collection(db, "news"));
       setNews(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    } catch (err: any) {
-      console.error("Add news error:", err);
-      toast.error(err.message || "Gagal menambah berita.");
+    } catch {
+      toast.error("Gagal menambah berita.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: DocumentData) => {
     setEditId(item.id);
     setEditTitle(item.title);
     setEditDescription(item.description);
@@ -123,9 +123,8 @@ export default function NewsManagement() {
       setModalOpen(false);
       const querySnapshot = await getDocs(collection(db, "news"));
       setNews(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    } catch (err: any) {
-      console.error("Update news error:", err);
-      toast.error(err.message || "Gagal memperbarui berita.");
+    } catch {
+      toast.error("Gagal memperbarui berita.");
     } finally {
       setLoading(false);
       setEditId(null);
@@ -162,9 +161,8 @@ export default function NewsManagement() {
       await deleteDoc(doc(db, "news", deleteId));
       setNews(news.filter((item) => item.id !== deleteId));
       toast.success("Berita dan gambar berhasil dihapus!");
-    } catch (err: any) {
-      console.error("Delete news error:", err);
-      toast.error(err.message || "Gagal menghapus berita.");
+    } catch {
+      toast.error("Gagal menghapus berita.");
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase";
 import { Poppins } from "next/font/google";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const poppins = Poppins({
   weight: ["400", "600", "700"],
@@ -46,8 +47,8 @@ export default function DetailBerita() {
 
         // Increment view count
         await updateDoc(newsRef, { viewCount: (data.viewCount || 0) + 1 });
-      } catch (err: any) {
-        console.error("Failed to fetch news:", err);
+      } catch {
+        toast.error("Failed to fetch news");
       } finally {
         setIsLoading(false);
       }

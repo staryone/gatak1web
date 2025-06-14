@@ -9,6 +9,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/cloudinary";
@@ -27,7 +28,7 @@ export default function UMKMManagement() {
   const [phone, setPhone] = useState("");
   const [socialMedia, setSocialMedia] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [umkms, setUMKMs] = useState<any[]>([]);
+  const [umkms, setUMKMs] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -50,8 +51,8 @@ export default function UMKMManagement() {
         setUMKMs(
           querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
         );
-      } catch (err: any) {
-        toast.error(err.message || "Gagal memuat UMKM.");
+      } catch {
+        toast.error("Gagal memuat UMKM.");
       }
     };
     fetchUMKMs();
@@ -86,15 +87,14 @@ export default function UMKMManagement() {
       setUMKMs(
         querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
       );
-    } catch (err: any) {
-      console.error("Add UMKM error:", err);
-      toast.error(err.message || "Gagal menambah UMKM.");
+    } catch {
+      toast.error("Gagal menambah UMKM.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: DocumentData) => {
     setEditId(item.id);
     setEditName(item.name);
     setEditDescription(item.description);
@@ -138,9 +138,8 @@ export default function UMKMManagement() {
       setUMKMs(
         querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
       );
-    } catch (err: any) {
-      console.error("Update UMKM error:", err);
-      toast.error(err.message || "Gagal memperbarui UMKM.");
+    } catch {
+      toast.error("Gagal memperbarui UMKM.");
     } finally {
       setLoading(false);
     }
@@ -173,9 +172,8 @@ export default function UMKMManagement() {
       setUMKMs(umkms.filter((item) => item.id !== deleteId));
       toast.success("UMKM dan gambar berhasil dihapus!");
       setDeleteModalOpen(false);
-    } catch (err: any) {
-      console.error("Delete UMKM error:", err);
-      toast.error(err.message || "Gagal menghapus UMKM.");
+    } catch {
+      toast.error("Gagal menghapus UMKM.");
     } finally {
       setLoading(false);
     }
