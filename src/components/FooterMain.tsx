@@ -37,7 +37,7 @@ export default function FooterMain() {
             Galeri
           </Link>
           <Link
-            href="/kontak"
+            href="/profil"
             className="hover:text-green-200 text-xl font-bold"
           >
             Kontak
