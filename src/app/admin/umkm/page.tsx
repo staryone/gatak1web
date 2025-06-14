@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  Button,
-  Label,
-  TextInput,
-  Textarea,
-  Card,
-  FileInput,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "flowbite-react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   collection,
   addDoc,
@@ -23,9 +12,14 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { uploadImage } from "@/lib/cloudinary";
-import Image from "next/image";
 import toast from "react-hot-toast";
 import { HiPencil, HiTrash } from "react-icons/hi";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+});
 
 export default function UMKMManagement() {
   const [name, setName] = useState("");
@@ -188,89 +182,101 @@ export default function UMKMManagement() {
   };
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div
+      className={`p-6 bg-gray-50 dark:bg-gray-900 min-h-screen ${poppins.className}`}
+    >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
           Kelola UMKM
         </h2>
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label
+              <label
                 htmlFor="name"
-                className="text-gray-700 dark:text-gray-300 font-medium"
-              />
-              <TextInput
+                className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Nama
+              </label>
+              <input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Masukkan nama UMKM"
-                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                 required
               />
             </div>
             <div>
-              <Label
+              <label
                 htmlFor="description"
-                className="text-gray-700 dark:text-gray-300 font-medium"
-              />
-              <Textarea
+                className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Deskripsi
+              </label>
+              <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Masukkan deskripsi UMKM"
-                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                 rows={6}
                 required
               />
             </div>
             <div>
-              <Label
+              <label
                 htmlFor="phone"
-                className="text-gray-700 dark:text-gray-300 font-medium"
-              />
-              <TextInput
+                className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Telepon
+              </label>
+              <input
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Masukkan nomor telepon (contoh: +6281234567890)"
-                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                 type="tel"
               />
             </div>
             <div>
-              <Label
+              <label
                 htmlFor="socialMedia"
-                className="text-gray-700 dark:text-gray-300 font-medium"
-              />
-              <TextInput
+                className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Sosial Media
+              </label>
+              <input
                 id="socialMedia"
                 value={socialMedia}
                 onChange={(e) => setSocialMedia(e.target.value)}
                 placeholder="Masukkan link sosial media (contoh: https://instagram.com/username)"
-                className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
               />
             </div>
             <div>
-              <Label
+              <label
                 htmlFor="image"
-                className="text-gray-700 dark:text-gray-300 font-medium"
-              />
-              <FileInput
+                className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                Gambar
+              </label>
+              <input
                 id="image"
+                type="file"
                 accept="image/*"
                 onChange={(e) => setImage(e.target.files?.[0] || null)}
-                className="mt-1 rounded-lg"
+                className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
               />
             </div>
-            <Button
+            <button
               type="submit"
-              color="blue"
-              className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+              className="w-full bg-green-700 text-white py-3 rounded-lg hover:bg-green-800 text-xl font-semibold transition duration-300 disabled:opacity-50"
               disabled={loading}
             >
               {loading ? "Menambahkan..." : "Tambah UMKM"}
-            </Button>
+            </button>
           </form>
         </div>
         <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
@@ -278,9 +284,9 @@ export default function UMKMManagement() {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {umkms.map((item) => (
-            <Card
+            <div
               key={item.id}
-              className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow dark:bg-gray-800 border-none"
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
             >
               {item.imageUrl && (
                 <Image
@@ -292,19 +298,19 @@ export default function UMKMManagement() {
                 />
               )}
               <div className="p-4 flex flex-col">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                   {item.name}
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-3 flex-grow">
+                <p className="text-gray-600 dark:text-gray-300 text-lg mb-2 line-clamp-3 flex-grow">
                   {item.description}
                 </p>
                 {item.phone && (
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-2">
+                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
                     <strong>Telepon:</strong> {item.phone}
                   </p>
                 )}
                 {item.socialMedia && (
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">
                     <strong>Sosial Media:</strong>{" "}
                     <a
                       href={item.socialMedia}
@@ -316,180 +322,202 @@ export default function UMKMManagement() {
                     </a>
                   </p>
                 )}
-                <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-xs mb-4">
-                  <span>{item.createdAt.split("T")[0]}</span>
+                <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-base mb-4">
+                  <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex space-x-2">
-                  <Button
-                    color="blue"
-                    size="sm"
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                  <button
                     onClick={() => handleEdit(item)}
+                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-xl font-semibold transition duration-300 flex items-center justify-center"
                   >
-                    <HiPencil className="mr-2" /> Edit
-                  </Button>
-                  <Button
-                    color="red"
-                    size="sm"
-                    className="flex-1 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
+                    <HiPencil className="mr-2" size={20} /> Edit
+                  </button>
+                  <button
                     onClick={() =>
                       handleDeleteConfirm(item.id, item.imagePublicId)
                     }
                     disabled={loading}
+                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 text-xl font-semibold transition duration-300 flex items-center justify-center disabled:opacity-50"
                   >
-                    <HiTrash className="mr-2" /> Hapus
-                  </Button>
+                    <HiTrash className="mr-2" size={20} /> Hapus
+                  </button>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
 
         {/* Edit Modal */}
-        <Modal
-          show={modalOpen}
-          onClose={() => setModalOpen(false)}
-          size="lg"
-          popup
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center ${
+            modalOpen ? "" : "hidden"
+          }`}
         >
-          <ModalHeader className="text-xl font-semibold text-gray-900 dark:text-white">
-            Edit UMKM
-          </ModalHeader>
-          <ModalBody>
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={(e) => {
+              e.stopPropagation();
+              setModalOpen(false);
+            }}
+          ></div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 overflow-scroll w-full h-full max-h-lvh max-w-lg mx-auto z-10 md:max-w-2xl sm:max-w-sm">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Edit UMKM
+            </h3>
             <form onSubmit={handleUpdate} className="space-y-6">
               <div>
-                <Label
+                <label
                   htmlFor="editName"
-                  className="text-gray-700 dark:text-gray-300 font-medium"
-                />
-                <TextInput
+                  className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Nama
+                </label>
+                <input
                   id="editName"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="Masukkan nama UMKM"
-                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                   required
                 />
               </div>
               <div>
-                <Label
+                <label
                   htmlFor="editDescription"
-                  className="text-gray-700 dark:text-gray-300 font-medium"
-                />
-                <Textarea
+                  className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Deskripsi
+                </label>
+                <textarea
                   id="editDescription"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
                   placeholder="Masukkan deskripsi UMKM"
-                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                   rows={6}
                   required
                 />
               </div>
               <div>
-                <Label
+                <label
                   htmlFor="editPhone"
-                  className="text-gray-700 dark:text-gray-300 font-medium"
-                />
-                <TextInput
+                  className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Telepon
+                </label>
+                <input
                   id="editPhone"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
                   placeholder="Masukkan nomor telepon (contoh: +6281234567890)"
-                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                   type="tel"
                 />
               </div>
               <div>
-                <Label
+                <label
                   htmlFor="editSocialMedia"
-                  className="text-gray-700 dark:text-gray-300 font-medium"
-                />
-                <TextInput
+                  className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Sosial Media
+                </label>
+                <input
                   id="editSocialMedia"
                   value={editSocialMedia}
                   onChange={(e) => setEditSocialMedia(e.target.value)}
                   placeholder="Masukkan link sosial media (contoh: https://instagram.com/username)"
-                  className="mt-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white text-lg"
                 />
               </div>
               <div>
-                <Label
+                <label
                   htmlFor="editImage"
-                  className="text-gray-700 dark:text-gray-300 font-medium"
-                />
+                  className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  Gambar
+                </label>
                 {editImageUrl && !editImage && (
                   <div className="mt-2 mb-4">
                     <Image
                       src={editImageUrl}
                       alt="Preview"
-                      width={200}
-                      height={100}
+                      width={300}
+                      height={150}
                       className="object-cover rounded-lg"
                     />
                   </div>
                 )}
-                <FileInput
+                <input
                   id="editImage"
+                  type="file"
                   accept="image/*"
                   onChange={(e) => setEditImage(e.target.files?.[0] || null)}
-                  className="mt-1 rounded-lg"
+                  className="mt-2 w-full p-3 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
                 />
               </div>
               <div className="flex space-x-4">
-                <Button
+                <button
                   type="submit"
-                  color="blue"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                  className="flex-1 bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 text-xl font-semibold transition duration-300 disabled:opacity-50 flex items-center justify-center"
                   disabled={loading}
                 >
                   {loading ? "Menyimpan..." : "Simpan Perubahan"}
-                </Button>
-                <Button
-                  color="gray"
-                  className="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700"
-                  onClick={() => setModalOpen(false)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setEditId(null);
+                    setEditName("");
+                    setEditDescription("");
+                    setEditPhone("");
+                    setEditSocialMedia("");
+                    setEditImage(null);
+                    setEditImageUrl("");
+                  }}
+                  className="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 text-xl font-semibold"
                 >
                   Batal
-                </Button>
+                </button>
               </div>
             </form>
-          </ModalBody>
-        </Modal>
+          </div>
+        </div>
 
         {/* Delete Confirmation Modal */}
-        <Modal
-          show={deleteModalOpen}
-          onClose={() => setDeleteModalOpen(false)}
-          size="md"
-          popup
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center ${
+            deleteModalOpen ? "" : "hidden"
+          }`}
         >
-          <ModalHeader className="text-xl font-semibold text-gray-900 dark:text-white">
-            Konfirmasi Hapus
-          </ModalHeader>
-          <ModalBody>
-            <p className="text-gray-700 dark:text-gray-300">
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={() => setDeleteModalOpen(false)}
+          ></div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-auto z-10">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Konfirmasi Hapus
+            </h3>
+            <p className="text-gray-700 dark:text-gray-300 text-xl mb-6">
               Apakah Anda yakin ingin menghapus UMKM ini?
             </p>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="red"
-              onClick={handleDelete}
-              disabled={loading}
-              className="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
-            >
-              {loading ? "Menghapus..." : "Ya, Hapus"}
-            </Button>
-            <Button
-              color="gray"
-              onClick={() => setDeleteModalOpen(false)}
-              className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700"
-            >
-              Batal
-            </Button>
-          </ModalFooter>
-        </Modal>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handleDelete}
+                disabled={loading}
+                className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 text-xl font-semibold transition duration-300 disabled:opacity-50"
+              >
+                {loading ? "Menghapus..." : "Ya, Hapus"}
+              </button>
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 text-xl font-semibold"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

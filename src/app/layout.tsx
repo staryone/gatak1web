@@ -4,6 +4,12 @@ import { ThemeModeScript } from "flowbite-react";
 import FooterMain from "@/components/FooterMain";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Website Dusun Gatak 1",
@@ -20,9 +26,18 @@ export default function RootLayout({
       <head>
         <ThemeModeScript />
       </head>
-      <body>
+      <body className={poppins.className}>
         <AuthProvider>
-          <Toaster position="top-right" />
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              style: {
+                fontFamily: poppins.style.fontFamily,
+                fontSize: "1.2rem", // Equivalent to text-xl
+                fontWeight: "normal",
+              },
+            }}
+          />
           {children}
           <FooterMain />
         </AuthProvider>

@@ -19,10 +19,10 @@ export default function FooterMain() {
         </div>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
           <Link
-            href="/profil-dusun"
+            href="/profil"
             className="hover:text-green-200 text-xl font-bold"
           >
-            Profil Dusun
+            Profil
           </Link>
           <Link
             href="/berita"

@@ -7,8 +7,9 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
 import { Poppins } from "next/font/google";
+import toast from "react-hot-toast";
 
 const poppins = Poppins({
   weight: ["400", "600", "700"],
@@ -18,11 +19,13 @@ const poppins = Poppins({
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [headerData, setHeaderData] = useState({
+  const [headerData, setHeaderData] = useState<DocumentData>({
     logoUrl: "/next.svg",
-    title: "Dusun Gatak 1",
+    title: "Padukuhan Gatak 1",
     subtitle: "Kalurahan Ngestirejo",
   });
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const pathname = usePathname();
   const { user, loading } = useAuth();
 
@@ -37,8 +40,16 @@ export default function Header() {
 
   useEffect(() => {
     const fetchHeaderData = async () => {
-      const headerDoc = await getDoc(doc(db, "siteConfig", "header"));
-      if (headerDoc.exists()) setHeaderData(headerDoc.data());
+      try {
+        const headerDoc = await getDoc(doc(db, "siteConfig", "header"));
+        if (headerDoc.exists()) {
+          setHeaderData(headerDoc.data());
+        }
+      } catch {
+        toast.error("Error fetching data");
+      } finally {
+        setIsLoadingData(false);
+      }
     };
     fetchHeaderData();
   }, []);
@@ -47,6 +58,7 @@ export default function Header() {
     try {
       await signOut(auth);
       localStorage.removeItem("idToken");
+      setLogoutModalOpen(false);
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -57,11 +69,13 @@ export default function Header() {
       {/* Desktop Navbar */}
       <nav
         className={`hidden lg:flex fixed w-full z-10 text-white transition-all duration-300 ${
-          isScrolled ? "bg-green-700 shadow-md" : "bg-transparent"
+          isScrolled || isLoadingData || pathname !== "/"
+            ? "bg-green-700 shadow-md"
+            : "bg-transparent"
         } ${poppins.className}`}
       >
         <div className="flex items-center justify-between px-6 py-2 w-full">
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <Image src={headerData.logoUrl} height={40} width={40} alt="Logo" />
             <div className="ml-3">
               <span className="text-xl font-bold">{headerData.title}</span>
@@ -69,7 +83,7 @@ export default function Header() {
                 {headerData.subtitle}
               </span>
             </div>
-          </div>
+          </Link>
           <div className="flex space-x-6">
             <Link
               href="/"
@@ -80,12 +94,12 @@ export default function Header() {
               Home
             </Link>
             <Link
-              href="/profil-dusun"
+              href="/profil"
               className={`hover:text-green-200 text-xl font-bold ${
-                pathname === "/profil-dusun" ? "underline decoration-3" : ""
+                pathname === "/profil" ? "underline decoration-3" : ""
               }`}
             >
-              Profil Dusun
+              Profil
             </Link>
             <Link
               href="/berita"
@@ -131,7 +145,7 @@ export default function Header() {
             )}
             {!loading && user && (
               <button
-                onClick={handleLogout}
+                onClick={() => setLogoutModalOpen(true)}
                 className="hover:text-green-200 text-xl font-bold"
               >
                 Logout
@@ -144,15 +158,17 @@ export default function Header() {
       {/* Mobile Navbar */}
       <nav
         className={`lg:hidden fixed w-full z-10 text-white transition-all duration-300 ${
-          isScrolled || isMenuOpen ? "bg-green-700 shadow-md" : "bg-transparent"
+          isScrolled || isMenuOpen || pathname !== "/"
+            ? "bg-green-700 shadow-md"
+            : "bg-transparent"
         } ${poppins.className}`}
       >
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
             <Image src={headerData.logoUrl} height={40} width={40} alt="Logo" />
             <div className="ml-3">
-              <span className="text-xl font-bold">{headerData.title}</span>
-              <span className="block text-lg font-light">
+              <span className="text-lg font-bold">{headerData.title}</span>
+              <span className="block text-sm font-light">
                 {headerData.subtitle}
               </span>
             </div>
@@ -197,13 +213,13 @@ export default function Header() {
               Home
             </Link>
             <Link
-              href="/profil-dusun"
+              href="/profil"
               className={`hover:text-green-200 text-xl font-bold ${
-                pathname === "/profil-dusun" ? "underline decoration-2" : ""
+                pathname === "/profil" ? "underline decoration-2" : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
-              Profil Dusun
+              Profil
             </Link>
             <Link
               href="/berita"
@@ -254,10 +270,7 @@ export default function Header() {
             )}
             {!loading && user && (
               <button
-                onClick={() => {
-                  handleLogout();
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => setLogoutModalOpen(true)}
                 className="hover:text-green-200 text-xl font-bold"
               >
                 Logout
@@ -266,6 +279,40 @@ export default function Header() {
           </div>
         )}
       </nav>
+
+      {/* Logout Confirmation Modal */}
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center ${
+          logoutModalOpen ? "" : "hidden"
+        }`}
+      >
+        <div
+          className="fixed inset-0 bg-black/50"
+          onClick={() => setLogoutModalOpen(false)}
+        ></div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-auto z-10">
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+            Konfirmasi Logout
+          </h3>
+          <p className="text-gray-700 dark:text-gray-300 text-xl mb-6">
+            Apakah Anda yakin ingin keluar?
+          </p>
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 text-xl font-semibold transition duration-300"
+            >
+              Ya, Keluar
+            </button>
+            <button
+              onClick={() => setLogoutModalOpen(false)}
+              className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 text-xl font-semibold"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
