@@ -6,6 +6,28 @@ export async function middleware(request: NextRequest) {
 
   // Define admin routes
   const adminRoutes = ["/admin", "/admin/*"];
+  const idToken = request.cookies.get("idToken")?.value;
+
+  // Redirect authenticated users from /login to /admin
+  if (pathname === "/login" && idToken) {
+    try {
+      const response = await fetch(
+        `${request.nextUrl.origin}/api/verify-token`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        return NextResponse.redirect(new URL("/admin", request.url));
+      }
+    } catch {
+      // If token verification fails, allow access to login page
+    }
+  }
 
   // Check if the current path is an admin route
   const isAdminRoute = adminRoutes.some((route) => {
@@ -17,8 +39,6 @@ export async function middleware(request: NextRequest) {
   });
 
   if (isAdminRoute) {
-    const idToken = request.cookies.get("idToken")?.value;
-
     if (!idToken) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -46,5 +66,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/login"],
 };

@@ -59,6 +59,7 @@ export default function Header() {
       await signOut(auth);
       localStorage.removeItem("idToken");
       setLogoutModalOpen(false);
+      toast.success("Berhasil logout");
     } catch (err) {
       console.error("Logout failed:", err);
     }

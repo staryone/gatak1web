@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Poppins } from "next/font/google";
@@ -16,6 +16,7 @@ import {
   HiShoppingBag,
   HiMenuAlt2,
 } from "react-icons/hi";
+import toast from "react-hot-toast";
 
 const poppins = Poppins({
   weight: ["400", "600", "700"],
@@ -28,13 +29,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      localStorage.removeItem("idToken");
       setLogoutModalOpen(false);
+      toast.success("Berhasil logout");
+      router.push("/login");
     } catch (err) {
       console.error("Logout failed:", err);
     }
