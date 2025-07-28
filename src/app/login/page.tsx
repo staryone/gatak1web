@@ -26,7 +26,7 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login berhasil!");
-      router.push("/admin");
+      window.location.href = "/admin";
     } catch {
       toast.error("Login gagal. Periksa email atau password Anda.");
     } finally {

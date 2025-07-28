@@ -227,7 +227,7 @@ export default function UMKMManagement() {
                 htmlFor="phone"
                 className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                Telepon
+                Telepon / WA
               </label>
               <input
                 id="phone"
