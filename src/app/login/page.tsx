@@ -3,7 +3,6 @@
 import { auth } from "@/lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 import { Poppins } from "next/font/google";
 import toast from "react-hot-toast";
@@ -18,7 +17,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
