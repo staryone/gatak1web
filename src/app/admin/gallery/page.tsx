@@ -156,7 +156,7 @@ export default function GalleryManagement() {
               <button
                 onClick={() => handleDeleteConfirm(item.id, item.imagePublicId)}
                 disabled={loading}
-                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-opacity duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-opacity duration-300 opacity-100 group-hover:opacity-100 disabled:opacity-50"
               >
                 <svg
                   className="w-5 h-5"
